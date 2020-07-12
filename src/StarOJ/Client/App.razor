@@ -45,6 +45,7 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await LoadingInfoInterop.Hide(JSRuntime);
+        await JSRuntime.InvokeVoidAsync("browserResize.registerResizeCallback");
         await base.OnAfterRenderAsync(firstRender);
     }
 }

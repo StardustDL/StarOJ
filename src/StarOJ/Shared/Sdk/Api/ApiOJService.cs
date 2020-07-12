@@ -14,9 +14,13 @@ namespace StarOJ.Sdk.Api
         public ApiOJService(HttpClient httpClient)
         {
             HttpClient = httpClient;
+
+            JudgerService = new JudgerService(HttpClient);
         }
 
         public HttpClient HttpClient { get; }
+
+        public IJudgerService JudgerService { get; }
 
         const string PrepUrl = "/api";
 

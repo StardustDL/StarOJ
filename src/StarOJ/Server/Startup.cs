@@ -34,8 +34,7 @@ namespace StarOJ.Server
         {
             services.AddSingleton(new RuntimeOptions { IsPrerender = true });
 
-            services.Configure<AppOption>(Configuration.GetSection("Options"));
-
+            services.AddConfigurations(Configuration);
 
             {
                 services.AddDbContext<ApplicationDataContext>(options =>
@@ -63,6 +62,8 @@ namespace StarOJ.Server
             services.AddHttpClient();
 
             services.AddServerPrerenderAuthorization();
+
+            services.AddJudge0();
 
             services.AddSwaggerGen(c =>
             {

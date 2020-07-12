@@ -19,6 +19,7 @@
     <link href="manifest.json" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon.png" />
     <component type="typeof(AcBlog.Extensions.StyleSheetDeclare)" render-mode="Static" />
+    <link href="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -59,6 +60,11 @@
     <script src="_content/AcBlog.Extensions.Core/component.js"></script>
 
     <component type="typeof(AcBlog.Extensions.ScriptDeclare)" render-mode="Static" />
+
+    <script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js"></script>
+    <script>require.config({ paths: { 'vs': '_content/BlazorMonaco/lib/monaco-editor/min/vs' } });</script>
+    <script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js"></script>
+    <script src="_content/BlazorMonaco/jsInterop.js"></script>
 </body>
 
 </html>

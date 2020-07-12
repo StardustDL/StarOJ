@@ -1,4 +1,5 @@
 ﻿using AcBlog.UI.Components;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace StarOJ.Client
 {

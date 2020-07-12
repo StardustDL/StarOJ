@@ -19,3 +19,12 @@ window.starojInteropLoadingInfoHide = function () {
     var loadingInfo = document.getElementById("loading-info-ui");
     loadingInfo.style = "display: none";
 };
+
+window.browserResize = {
+    registerResizeCallback: function () {
+        window.addEventListener("resize", browserResize.resized);
+    },
+    resized: function () {
+        DotNet.invokeMethodAsync("StarOJ.Client", 'OnBrowserResize').then(data => data);
+    }
+}

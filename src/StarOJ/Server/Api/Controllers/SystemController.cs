@@ -13,7 +13,6 @@ namespace StarOJ.Server.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class SystemController : ControllerBase
     {
         public SystemController(IOptions<OJOptions> ojOptions, IOptions<BuildStatus> buildStatus)

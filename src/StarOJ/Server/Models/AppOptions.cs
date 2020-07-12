@@ -1,6 +1,6 @@
 ﻿namespace StarOJ.Server.Models
 {
-    public class AppOption
+    public class AppOptions
     {
         public bool DisableRegisterNewUser { get; set; } = false;
     }

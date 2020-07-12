@@ -9,6 +9,8 @@ namespace StarOJ.Sdk
 {
     public interface IOJService
     {
+        IJudgerService JudgerService { get; }
+
         Task<OJOptions> GetOptions(CancellationToken cancellationToken = default);
     }
 }
