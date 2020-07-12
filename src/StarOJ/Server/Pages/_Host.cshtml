@@ -1,0 +1,64 @@
+﻿@page "/"
+@model StarOJ.Server.Pages.HostModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using StarOJ.Client
+
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@Model.Title</title>
+    <base href="~/" />
+    <link rel="icon" href="icon.png" />
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon.png" />
+    <component type="typeof(AcBlog.Extensions.StyleSheetDeclare)" render-mode="Static" />
+</head>
+
+<body>
+    <app>
+        @if (!HttpContext.Request.Path.StartsWithSegments("/authentication"))
+        {
+            // TODO: Wait Antd fix prerender bug https://github.com/ant-design-blazor/ant-design-blazor/issues/181
+            <component type="typeof(App)" render-mode="Server" />
+        }
+        else
+        {
+            <div class="loading loading1" style="margin: auto; bottom: 0; right:0; left: 0; top: 0; position: fixed">
+                <div>
+                    <div>
+                        <div>
+                            <div>
+                                <div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </app>
+    <div id="loading-info-ui" class="alert alert-info mdi mdi-information" style="display: block;">
+        Loading application...
+    </div>
+    <div id="blazor-error-ui" class="alert alert-danger mdi mdi-alert" role="alert">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="_framework/blazor.webassembly.js" autostart="true"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+
+    <script src="_content/AcBlog.Extensions.Core/component.js"></script>
+
+    <component type="typeof(AcBlog.Extensions.ScriptDeclare)" render-mode="Static" />
+</body>
+
+</html>
