@@ -1,0 +1,69 @@
+﻿@inherits LayoutComponentBase
+@layout EmptyLayout
+@inject IOptions<BuildStatus> BuildStatus
+@inject IOJService Service
+
+<Layout Style="min-height: 100vh; background: initial">
+    <Sider Collapsible Theme="SiderTheme.Light" Breakpoint="BreakpointType.Xl">
+        <Menu Mode="MenuMode.Inline" Theme="MenuTheme.Light">
+            <MenuItem Class="text-center p-0">
+                @OJOptions.Name
+            </MenuItem>
+            <MenuItem>
+                <MdiIcon Type="home" />
+                <span>
+                    <MenuLink href="" Match="NavLinkMatch.All">
+                        Home
+                    </MenuLink>
+                </span>
+            </MenuItem>
+            <MenuItem>
+                <MdiIcon Type="cog" />
+                <span>
+                    <MenuLink href="settings">
+                        Settings
+                    </MenuLink>
+                </span>
+            </MenuItem>
+        </Menu>
+    </Sider>
+    <Layout Style="background: initial;">
+        <Content>@Body</Content>
+        <Footer Class="text-center p-1">
+            <MdiIcon Type="copyright" />
+            @OJOptions.StartYear - @DateTimeOffset.Now.Year, @(OJOptions.Onwer). All rights reserved.
+            @if (!string.IsNullOrEmpty(OJOptions.Footer))
+            {
+                @((MarkupString)OJOptions.Footer)
+            }
+            Powered by
+
+            @{
+                RenderFragment Info = @<div>
+                    Repository: <a href="https://github.com/@BuildStatus.Value.Repository">@BuildStatus.Value.Repository</a>
+                    <br />
+                    Commit: <a href="https://github.com/@BuildStatus.Value.Repository/commit/@BuildStatus.Value.Commit">@BuildStatus.Value.TrimedCommit</a>
+                    <br />
+                    Branch: <a href="https://github.com/@BuildStatus.Value.Repository/tree/@BuildStatus.Value.Branch">@BuildStatus.Value.TrimedBranch</a>
+                    <br />
+                    Version: @BuildStatus.Value.Version
+                    <br />
+                    Built Date: @BuildStatus.Value.BuildDate
+                </div>;
+            }
+            <Popover Content="Info" Title="@($"StarOJ v{BuildStatus.Value.Version}")">
+                <a href="https://github.com/StardustDL/StarOJ">StarOJ</a>
+            </Popover>
+        </Footer>
+    </Layout>
+</Layout>
+
+@code {
+    private OJOptions OJOptions { get; set; } = new OJOptions();
+
+    protected override async Task OnInitializedAsync()
+    {
+        OJOptions = await Service.GetOptions();
+        await base.OnInitializedAsync();
+    }
+}

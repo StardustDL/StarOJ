@@ -1,0 +1,13 @@
+@page "/authentication/{action}"
+@inherits BasePage
+
+<CustomRemoteAuthenticatorView Action="@Action">
+    <LogOutSucceeded>
+        <RedirectTo Target="" />
+    </LogOutSucceeded>
+</CustomRemoteAuthenticatorView>
+
+@code{
+    [Parameter]
+    public string Action { get; set; }
+}
