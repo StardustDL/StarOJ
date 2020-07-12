@@ -9,7 +9,7 @@ x-logging:
 
 services:
   judge0server:
-    image: judge0/api:1.9.0
+    image: registry.cn-hangzhou.aliyuncs.com/stardustdl/judge0:latest
     volumes:
       - ./judge0.conf:/judge0.conf:ro
     privileged: true
@@ -17,7 +17,7 @@ services:
     restart: always
 
   judge0workers:
-    image: judge0/api:1.9.0
+    image: registry.cn-hangzhou.aliyuncs.com/stardustdl/judge0:latest
     command: ["./scripts/workers"]
     volumes:
       - ./judge0.conf:/judge0.conf:ro
@@ -29,7 +29,7 @@ services:
     image: postgres:9.6
     env_file: judge0.conf
     volumes:
-      - judge0:/postgres-data:/var/lib/postgresql/data/
+      - judge0dbdata:/var/lib/postgresql/data/
     <<: *default-logging
     restart: always
 
@@ -41,20 +41,23 @@ services:
     ]
     env_file: judge0.conf
     volumes:
-      - judge0:/redis-data:/data
+      - judge0redisdata:/data
     <<: *default-logging
     restart: always
   
   client:
-    image: stardustdl/staroj:latest
+    image: registry.cn-hangzhou.aliyuncs.com/stardustdl/staroj:latest
     ports:
       - "5000:80"
-    volumes:
-      - ./client/appsettings.json:/app/appsettings.json
+    environment:
+      - ConnectionStrings:IdentityConnection=Server=db;User=sa;Password=MyPassword001;Database=api_identity;
+      - ConnectionStrings:DefaultConnection=Server=db;User=sa;Password=MyPassword001;Database=api_default;
+    # volumes:
+      # - ./client/appsettings.json:/app/appsettings.json
     depends_on:
       - db
   db:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: registry.cn-hangzhou.aliyuncs.com/stardustdl/mssql:latest
     environment:
       - SA_PASSWORD=MyPassword001
       - ACCEPT_EULA=Y
@@ -65,4 +68,5 @@ services:
   
 volumes:
   data:
-  judge0:
+  judge0redisdata:
+  judge0dbdata:
