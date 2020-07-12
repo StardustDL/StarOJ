@@ -73,3 +73,18 @@ jobs:
       with:
         name: packages
         path: ./packages
+  mirror-images:
+    needs: pub-images
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Push image
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.MIRROR_DOCKER_USERNAME }}
+        password: ${{ secrets.MIRROR_DOCKER_PASSWORD }}
+        registry: ${{ secrets.MIRROR_DOCKER_REGISTRY }}
+        repository: stardustdl/staroj
+        tags: latest
+        dockerfile: ./docker/mirror/Dockerfile
