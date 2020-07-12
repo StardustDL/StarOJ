@@ -6,6 +6,10 @@ An online-judge platform based on Judge0.
 
 ![](https://repository-images.githubusercontent.com/278850268/228cf880-c43b-11ea-9876-45d254c8a9da)
 
+## Screenshots
+
+![](https://raw.githubusercontent.com/StardustDL/own-staticfile-hosting/master/StardustDL/StarOJ/images/demo_ide.png)
+
 ## Install
 
 > StarOJ needs Judge0 service.

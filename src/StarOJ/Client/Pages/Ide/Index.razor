@@ -22,26 +22,61 @@
     </PageHeaderBreadcrumb>
     <PageHeaderExtra>
         <div class="btn-group-toggle mx-auto" role="group">
+            <button class="btn btn-primary mdi mdi-upload" @onclick="@(async e=>await OnSubmit())">Submit</button>
             @if (JudgingTask != null)
             {
-                <button class="btn btn-success mdi mdi-refresh" @onclick="@(e=>OnFresh())">Fresh</button>
+                <button class="btn btn-success mdi mdi-refresh" @onclick="@(async e=>await OnFresh())">Fresh</button>
             }
-            <button class="btn btn-primary mdi mdi-upload" @onclick="@(e=>OnSubmit())">Submit</button>
         </div>
     </PageHeaderExtra>
 </PageHeader>
 
 <Row Style="height: 100%; width: 100%">
-    <Col Span="12">
+    <Col Span="12" Style="padding-right: 60px">
     <MonacoEditor @ref="codeEditor" Id="code-editor" ConstructionOptions="CodeEditorConstructionOptions" />
     </Col>
     <Col Span="12">
-    <Row Style="height: 50%; width: 100%">
-        <MonacoEditor @ref="inputEditor" Id="input-editor" ConstructionOptions="InputEditorConstructionOptions" />
-    </Row>
-    <Row Style="height: 50%; width: 100%">
-        <MonacoEditor @ref="outputEditor" Id="output-editor" ConstructionOptions="OutputEditorConstructionOptions" />
-    </Row>
+    <div class="form-group">
+        <label>Language</label>
+        <select class="form-control" @onchange="@(async e=>await OnLanguageChange(e))">
+            @foreach (CodeLanguage v in Enum.GetValues(typeof(CodeLanguage)))
+            {
+                if (v == model.Language)
+                {
+                    <option value="@((int)v)" selected>@Enum.GetName(typeof(CodeLanguage), v)</option>
+                }
+                else
+                {
+                    <option value="@((int)v)">@Enum.GetName(typeof(CodeLanguage), v)</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Input</label>
+        <textarea class="form-control" rows="10" @bind="@model.StandardInput"></textarea>
+    </div>
+    @if (JudgingTask != null)
+    {
+        <div class="form-group">
+            <label>Output</label>
+            <textarea class="form-control" rows="10" readonly>@JudgingTask.StandardOutput</textarea>
+        </div>
+        @if (!string.IsNullOrEmpty(JudgingTask.StandardError))
+        {
+            <div class="form-group">
+                <label>Error Output</label>
+                <textarea class="form-control invalid" rows="10" readonly>@JudgingTask.StandardError</textarea>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(JudgingTask.CompileOutput))
+        {
+            <div class="form-group">
+                <label>Compile Output</label>
+                <textarea class="form-control invalid" rows="10" readonly>@JudgingTask.CompileOutput</textarea>
+            </div>
+        }
+    }
     </Col>
 </Row>
 
@@ -49,9 +84,14 @@
 @code {
     private MonacoEditor codeEditor { get; set; }
 
-    private MonacoEditor inputEditor { get; set; }
+    public class Model
+    {
+        public string StandardInput { get; set; }
 
-    private MonacoEditor outputEditor { get; set; }
+        public CodeLanguage Language { get; set; } = CodeLanguage.C;
+    }
+
+    Model model = new Model();
 
     protected override void OnInitialized()
     {
@@ -63,10 +103,6 @@
     {
         if (codeEditor != null)
             await codeEditor.Layout();
-        if (inputEditor != null)
-            await inputEditor.Layout();
-        if (outputEditor != null)
-            await outputEditor.Layout();
     }
 
     public override void Dispose()
@@ -88,35 +124,23 @@
         };
     }
 
-    private StandaloneEditorConstructionOptions InputEditorConstructionOptions(MonacoEditor editor)
-    {
-        return new StandaloneEditorConstructionOptions
-        {
-            Language = "plaintext",
-            GlyphMargin = true,
-            Value = ""
-        };
-    }
-
-    private StandaloneEditorConstructionOptions OutputEditorConstructionOptions(MonacoEditor editor)
-    {
-        return new StandaloneEditorConstructionOptions
-        {
-            Language = "plaintext",
-            GlyphMargin = true,
-            Value = ""
-        };
-    }
-
     private JudgingTask JudgingTask { get; set; }
+
+    private async Task OnLanguageChange(ChangeEventArgs e)
+    {
+        model.Language = (CodeLanguage)int.Parse(e.Value.ToString());
+        await MonacoEditor.SetModelLanguage(await codeEditor.GetModel(), Utils.GetMonacoLanguageId(model.Language));
+    }
 
     private async Task OnSubmit()
     {
+        await BrowserHasResized();
+
         JudgingTask = new JudgingTask
         {
             Code = await codeEditor.GetValue(),
-            StandardInput = await inputEditor.GetValue(),
-            Language = CodeLanguage.C,
+            StandardInput = model.StandardInput,
+            Language = model.Language,
         };
 
         JudgingTask.Id = await Service.JudgerService.Create(JudgingTask);
@@ -124,7 +148,8 @@
 
     private async Task OnFresh()
     {
+        await BrowserHasResized();
+
         JudgingTask = await Service.JudgerService.Get(JudgingTask.Id);
-        await outputEditor.SetValue(JudgingTask.StandardOutput);
     }
 }

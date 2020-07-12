@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace StarOJ.Client.Models
 {
+
     public class BuildStatus
     {
         private string _commit = "";

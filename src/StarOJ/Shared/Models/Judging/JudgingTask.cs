@@ -13,5 +13,7 @@
         public string? StandardOutput { get; set; }
 
         public string? StandardError { get; set; }
+
+        public string? CompileOutput { get; set; }
     }
 }

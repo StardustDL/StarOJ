@@ -43,7 +43,7 @@ namespace StarOJ.Server.Api.Controllers
         {
             await Judge0.Authenticate(Options);
 
-            var result = await Judge0.SubmissionsService.Get(id, "stdout,time,memory,stderr,token,compile_output,message,status,language_id,stdin");
+            var result = await Judge0.SubmissionsService.Get(id, "stdout,time,memory,stderr,token,compile_output,message,status,language_id,stdin,source_code");
             if (result.IsSuccessStatusCode)
             {
                 var res = result.Result.ToJudgingTask();
