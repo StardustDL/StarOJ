@@ -9,6 +9,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["src/StarOJ/Shared/StarOJ.Shared.csproj", "src/StarOJ/Shared/"]
 COPY ["src/StarOJ/Client/StarOJ.Client.csproj", "src/StarOJ/Client/"]
+COPY ["src/StarOJ/Server/StarOJ.Server.csproj", "src/StarOJ/Server/"]
 RUN dotnet restore "src/StarOJ/Server/StarOJ.Server.csproj" -s https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json -s https://api.nuget.org/v3/index.json
 COPY . .
 WORKDIR "/src/src/StarOJ/Server"
