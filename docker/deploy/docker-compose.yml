@@ -48,9 +48,11 @@ services:
   client:
     image: stardustdl/staroj:latest
     ports:
-      - "5000:80"
+      - "7000:80"
     volumes:
-      - ./client/appsettings.json:/app/appsettings.json
+      - ConnectionStrings:IdentityConnection=Server=db;User=sa;Password=MyPassword001;Database=api_identity;
+      - ConnectionStrings:DefaultConnection=Server=db;User=sa;Password=MyPassword001;Database=api_default;
+      - IdentityServer:Options:PublicOrigin=http://localhost:7000
     depends_on:
       - db
   db:
