@@ -5,7 +5,7 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.405-buster AS build
 WORKDIR /src
 COPY ["src/StarOJ/Shared/StarOJ.Shared.csproj", "src/StarOJ/Shared/"]
 COPY ["src/StarOJ/Client/StarOJ.Client.csproj", "src/StarOJ/Client/"]
